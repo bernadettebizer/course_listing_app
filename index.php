@@ -1,62 +1,43 @@
 <?php
 
-require_once('course_listing_app/schoology_php_sdk/SchoologyApi.class.php');
-$consumer_key = '642b561c5d9f3b69ee249816c63aaaf805dc06a04';
-$consumer_secret = '8bc25b5fe2b7261197aabc8295275b1c';
+require_once('schoology_php_sdk/SchoologyApi.class.php');
  
-// Initialize the session
+// Replace these values with your application's consumer key and secret
+$consumer_key = 'fb12eba37c06b7aced463be1c01ece9605d404561';
+$consumer_secret = 'c31ed6cca37cb3a40f58f9e8467d8ee7';
+// Initialize the Schoology class
+$schoology = new SchoologyApi($consumer_key, $consumer_secret);
+ 
+// Initialize session handling
 session_start();
- 
-// Make sure a user is logged in. Users shouldn't be accessing 
-// this page directly without first passing through login.php
-if(!isset($_SESSION['schoology']['uid'])){
-  print 'No schmuser information was found when loading this page. Please try loading this application from within Schoology.';
+
+// Read the incoming login information.
+$login = $schoology->validateLogin();
+
+// If the last step failed, then either no information 
+// was received or it was invalid.
+if(!$login){
+  // Stop script execution
+  print 'No login information was received. Try loading this application again from within Schoology.';
   exit;
 }
- 
-$uid = $_SESSION['schoology']['uid'];
- 
-// Use the Schoology domain that the user is logged in to
-$domain = $_SESSION['schoology']['domain'];
- 
-$schoology = new SchoologyApi($consumer_key, $consumer_secret, $domain);
- 
-// Initialize a database connection. Replace these values 
-// with information needed to access your database
-$db_host = 'localhost';
-$db_user = '53864';
-$db_pass = 'Bcb315!!';
-$db_name = '53864';
-$db = new PDO('mysql:dbname='.$db_name.';host='.$db_host, $db_user, $db_pass);
 
-// Change this to the path of your token datastore adapter
-require_once('course_listing_app/App_OauthStorage.class.php');
-$oauth_store = new App_OauthStorage($db);
- 
-// get user's app session timestamp
-$app_session_timestamp = $_SESSION['session_created'];
- 
-// Retrieve and set the user's OAuth request key and 
-// request secret in the SchoologyApi object.
-// Also check if user has an active Schoology web session.
-$schoology->authorize($oauth_store, $uid, $app_session_timestamp);
-
-// Get a list of the user's course sections from the API
-$api_result = $schoology->api('/users/' . $uid . '/sections');
- 
-$output = '<b>Courses</b>';
-$output .= '<ul>';
- 
-// Cycle through the result and print each course
-$has_courses = FALSE;
-foreach($api_result->result->section as $section){
-  $has_courses = TRUE;
-  $output .= '<li>' . $section->course_title . ':' . $section->section_title . '</li>';
+// If our session already has a stored ID but it's 
+// different from what we received, restart the session.
+if(isset($_SESSION['schoology']['uid']) && $_SESSION['schoology']['uid'] != $login['uid']){
+  session_destroy();
+  session_start();
 }
  
-// If no courses were found print an 'empty' message
-if(!$has_courses){
-  $output .= '<li>No courses were found for this user.</li>';
+// The session might already be set if the user is accessing 
+// this application again without logging out of Schoology.
+// Only set the session information if not already present
+if(!isset($_SESSION['schoology']['uid'])){
+  $_SESSION['schoology'] = $login;
+  // later on, during authorization, we will compare this timestamp to the user's Schoology web session timestamp
+  // to ensure that the user still has an active web session
+  $_SESSION['session_created'] = time();
 }
- 
-$output .= '</ul>';
+
+require_once('application.php');
+// header('Location: ' . $_REQUEST['RelayState']);
