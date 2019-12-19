@@ -9,13 +9,13 @@
 * This example class uses the PHP PDO class to interact with a
 * MySQL table with the given structure:
 *
-CREATE TABLE  `oauth_tokens` (
-  `uid` int(10) unsigned NOT NULL,
-  `token_key` varchar(64) CHARACTER SET utf8 NOT NULL,
-  `token_secret` varchar(64) CHARACTER SET utf8 NOT NULL,
-  `token_is_access` tinyint(3) unsigned NOT NULL,
-  PRIMARY KEY (`uid`)
-) DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+*CREATE TABLE  `oauth_tokens` (
+*  `uid` int(10) unsigned NOT NULL,
+*  `token_key` varchar(64) CHARACTER SET utf8 NOT NULL,
+*  `token_secret` varchar(64) CHARACTER SET utf8 NOT NULL,
+*  `token_is_access` tinyint(3) unsigned NOT NULL,
+*  PRIMARY KEY (`uid`)
+*) DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 *
 */
 class App_OauthStorage implements SchoologyApi_OauthStorage
