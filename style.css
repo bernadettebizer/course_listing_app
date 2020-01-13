@@ -1,0 +1,16 @@
+body {
+  background-color: powderblue;
+  padding: 25px;
+  font-family: Georgia;
+}
+.text_input {
+	width: 300px;
+}
+.submit_button {
+	background-color: lightgreen;
+	padding: 20px;
+	width: 200px;
+	font-size: 16px;
+	font-family: Georgia;
+	border-color: black;
+}
