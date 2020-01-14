@@ -10,17 +10,15 @@ function user_api_information_form_validate(){
 		print("UID, Key, and Secret are all required fields");
 		exit;
 	} else {
-		user_api_information_form_submit($uid, $key, $secret, $options);
+		user_api_information_form_submit($uid, $key, $secret);
 	}
 }
 
 function user_api_information_form_submit($uid, $key, $secret){
-	$domain = 'schoology.com';
-
-	$schoology = new SchoologyApi($key, $secret);
-
 	$output = '<body style="background-color:powderblue; padding:25px; font-family:Georgia;">';
 
+	$schoology = new SchoologyApi($key, $secret);
+	
 	if(isset($_POST['courses'])||isset($_POST['groups'])){
 		if($_POST['courses']) {
 			$output .= list_courses($uid, $schoology);
@@ -40,42 +38,42 @@ function user_api_information_form_submit($uid, $key, $secret){
 function list_courses($uid, $schoology) {
 	$api_result = $schoology->api('/users/' . $uid . '/sections');
 	$output = '<b>Courses</b>';
-	$output .= '<ul>';
+	$output .= format_lists($api_result, 'course');
  
-	// Cycle through the result and print each course
-	$has_courses = FALSE;
-	foreach($api_result->result->section as $section){
-  		$has_courses = TRUE;
-  		$output .= '<li>' . $section->course_title . ': ' . $section->section_title . '</li>';
-	}
- 
-	// If no courses were found print an 'empty' message
-	if(!$has_courses){
-  		$output .= '<li>No courses were found for this user.</li>';
-	}
- 
-	$output .= '</ul>';
-
 	return $output;
 }
 
 function list_groups($uid, $schoology) {
 	$api_result = $schoology->api('/users/' . $uid . '/groups');
 	$output = '<b>Groups</b>';
-	$output .= '<ul>';
- 
-	// Cycle through the result and print each group
-	$has_groups = FALSE;
-	foreach($api_result->result->group as $group){
-  		$has_groups = TRUE;
-  		$output .= '<li>' . $group->title;
+	$output .= format_lists($api_result, 'group');
+
+	return $output;
+}
+
+function format_lists($api_result, $list_type) {
+	$has_courses_or_groups = FALSE;
+	$output = '<ul>';
+	
+	if($list_type='group') {
+		//cycles through a list of user groups
+		foreach((array)$api_result->result->group as $group){
+  			$has_courses_or_groups = TRUE;
+  			$output .= '<li>' . $group->title;
+		}
+	} {
+		//cyles through a list of user courses
+		foreach((array)$api_result->result->section as $section){
+	  		$has_courses_or_groups = TRUE;
+	  		$output .= '<li>' . $section->course_title . ': ' . $section->section_title . '</li>';
+		}
 	}
- 
+
 	// If no courses were found print an 'empty' message
-	if(!$has_groups){
-  		$output .= '<li>No groups were found for this user.</li>';
+	if(!$has_courses_or_groups){
+  		$output .= '<li>No ' . $list_type . 's were found for this user.</li>';
 	}
- 
+
 	$output .= '</ul>';
 
 	return $output;
