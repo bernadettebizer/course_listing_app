@@ -55,13 +55,13 @@ function format_lists($api_result, $list_type) {
 	$has_courses_or_groups = FALSE;
 	$output = '<ul>';
 	
-	if($list_type='group') {
+	if($list_type == 'group') {
 		//cycles through a list of user groups
 		foreach((array)$api_result->result->group as $group){
   			$has_courses_or_groups = TRUE;
   			$output .= '<li>' . $group->title;
 		}
-	} {
+	} else {
 		//cyles through a list of user courses
 		foreach((array)$api_result->result->section as $section){
 	  		$has_courses_or_groups = TRUE;
@@ -69,7 +69,7 @@ function format_lists($api_result, $list_type) {
 		}
 	}
 
-	// If no courses were found print an 'empty' message
+	// If no courses or groups were found print an 'empty' message
 	if(!$has_courses_or_groups){
   		$output .= '<li>No ' . $list_type . 's were found for this user.</li>';
 	}
