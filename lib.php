@@ -2,23 +2,39 @@
 
 require_once('schoology_php_sdk/SchoologyApi.class.php');
 
-function user_api_information_form_validate(){
-	$uid = $_POST['uid'];
-	$key = $_POST['key'];
-	$secret = $_POST['secret'];
-
-	if(is_null($uid)||is_null($key)||is_null($secret)) {
-		print("UID, Key, and Secret are all required fields");
-		exit;
+function process_and_validate_form_data(){
+	$form_data = get_form_data_from_post();
+	
+	if (user_api_information_form_validate($form_data)) {
+		user_api_information_form_submit($form_data);
 	} else {
-		user_api_information_form_submit($uid, $key, $secret);
+		exit;
 	}
 }
 
-function user_api_information_form_submit($uid, $key, $secret){
+function get_form_data_from_post(){
+	$form_data = array();
+	$form_data['uid'] = $_POST['uid'];
+	$form_data['key'] = $_POST['key'];
+	$form_data['secret'] = $_POST['secret'];
+
+	return $form_data;
+}
+
+function user_api_information_form_validate($form_data){
+	if(is_null($form_data['uid'])||is_null($form_data['key'])||is_null($form_data['secret'])) {
+		print("UID, Key, and Secret are all required fields");
+		return FALSE;
+	} else {
+		return TRUE;
+	}
+}
+
+function user_api_information_form_submit($form_data){
 	$output = '<body style="background-color:powderblue; padding:25px; font-family:Georgia;">';
 
-	$schoology = new SchoologyApi($key, $secret);
+	$schoology = new SchoologyApi($form_data['key'], $form_data['secret']);
+	$uid = $form_data['uid'];
 	
 	if(isset($_POST['courses'])||isset($_POST['groups'])){
 		if($_POST['courses']) {
@@ -30,6 +46,9 @@ function user_api_information_form_submit($uid, $key, $secret){
 	} else {
 		$output .= '<p>You did not select to list either groups or courses.</p>';
 	}
+
+	//avoid string concatination in a loop
+	//use template or string builder, research php options
 
 	$output .='</body>';
 
@@ -69,6 +88,7 @@ function format_lists($api_result, $list_type) {
 	  		$output .= '<li>' . $section->course_title . ': ' . $section->section_title . '</li>';
 		}
 	}
+	//how could I avoid doing this/ make it so that I can call this function without it needing to know the list type, just do the list, DRY 
 
 	// If no courses or groups were found print an 'empty' message
 	if(!$has_courses_or_groups){
