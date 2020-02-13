@@ -1,4 +1,11 @@
 <?php
 require_once('lib.php');
 
-process_and_validate_form_data();
+$title = 'Course List';
+$courses_requested = isset($_POST['courses']);
+$groups_requested = isset($_POST['groups']);
+$results = process_and_validate_form_data();
+if($results){
+	$courses = $results['courses'];
+	$groups = $results['groups'];
+}
