@@ -5,7 +5,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title><?=$title?></title>
+	<title>User Information App</title>
 	<link rel="stylesheet" href="style.css">
 </head>
 
@@ -16,15 +16,15 @@
 		if($courses_requested){?>
 			<b>Courses</b>
 			<ul>
-			<? foreach($courses->section as $section) {?>
-				<li><?=$section->course_title?>:<?=$section->section_title?></li>
+			<? foreach($results['courses']->section as $section) {?>
+				<li><?=$section->course_title?>: <?=$section->section_title?></li>
 			<?}?>
 			</ul>
 		<?}
 		if($groups_requested){?>
 			<b>Groups</b>
 			<ul>
-			<? foreach($groups->group as $group) {?>
+			<? foreach($results['groups']->group as $group) {?>
 				<li><?=$group->title?></li>
 			<?}?>
 			</ul>
