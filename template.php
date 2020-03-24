@@ -10,14 +10,14 @@
 </head>
 
 <body>
-	<?if(is_null($results)){?>
-		<p>UID, Key, and Secret are all required fields.</p>
-	<?} elseif($courses_requested || $groups_requested) {
+	<?if(!$courses_requested && !$groups_requested){?>
+		<p>You did not select to list either groups or courses.</p>
+	<?} else {
 		if($courses_requested){?>
 			<b>Courses</b>
 			<ul>
-			<? foreach($results['courses']->section as $section) {?>
-				<li><?=$section->course_title?>: <?=$section->section_title?></li>
+			<? foreach($parsed_courses as $section) {?>
+				<li><?=$section['course_title']?>: <?=$section['section_title']?></li>
 			<?}?>
 			</ul>
 		<?}
@@ -29,10 +29,8 @@
 			<?}?>
 			</ul>
 		<?}
-
-	} else {?>
-		<p>You did not select to list either groups or courses.</p>
-	<?}?>
+	}
+	?>
 
 </body>
 
