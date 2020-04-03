@@ -16,16 +16,16 @@
 		if($courses_requested){?>
 			<b>Courses</b>
 			<ul>
-			<? foreach($parsed_courses as $section) {?>
-				<li><?=$section['course_title']?>: <?=$section['section_title']?></li>
+			<? foreach($section_list as $section) {?>
+				<li><a href=<?=$section['section_path']?> target="_blank"><?=$section['course_title']?>: <?=$section['section_title']?></a></li>
 			<?}?>
 			</ul>
 		<?}
 		if($groups_requested){?>
 			<b>Groups</b>
 			<ul>
-			<? foreach($results['groups']->group as $group) {?>
-				<li><?=$group->title?></li>
+			<? foreach($group_list as $group) {?>
+				<li><a href=<?=$group['group_path']?> target="_blank"><?=$group['group_title']?></a></li>
 			<?}?>
 			</ul>
 		<?}

@@ -5,22 +5,21 @@ require_once('App_OauthStorage.class.php');
 function get_data_from_api(){
 	$form_data = get_form_data_from_post();
 	$storage = make_db_connection();
-	$uid = get_uid();
-	$oauth_tokens = $storage->getAccessTokens($uid);
-	
+	$oauth_tokens = $storage->getAccessTokens($form_data['uid']);	
 	$consumer_key = 'a6694d0888207de681da8b99039f28d205e6e948b';
 	$consumer_secret = 'ea51feadb0f2885bd0a5cebd162d38a1';
 	$schoology = new SchoologyApi($consumer_key, $consumer_secret, '', $oauth_tokens['token_key'], $oauth_tokens['token_secret']);
 
 	$requests = user_api_information_form_submit($form_data);
-
-	return execute_api_requests($requests, $schoology);
+	$response_data = execute_api_requests($requests, $schoology);
+	return($response_data); 
 }
 
 function get_form_data_from_post(){
 	$form_data = [
 		'courses' => $_POST['courses'],
 		'groups' => $_POST['groups'],
+		'uid' => $_POST['uid'],
 	];
 
 	return $form_data;
@@ -37,19 +36,19 @@ function make_db_connection(){
 	}
 
 function user_api_information_form_submit($form_data){
-	//$uid = $form_data['uid'];
 	$requests = [];
+	$uid = $form_data['uid'];
 	
 	if($form_data['courses']) {
 		$request_courses = [
-			'endpoint' => '/users/51105630/sections',
+			'endpoint' => '/users/' . $uid . '/sections',
 			'data_type' => 'courses',
 		];
 		$requests[] = $request_courses;
 	}
 	if($form_data['groups']) {
 		$request_groups = [
-			'endpoint' => '/users/51105630/groups',
+			'endpoint' => '/users/' . $uid . '/groups',
 			'data_type' => 'groups',
 		];
 		$requests[] = $request_groups;

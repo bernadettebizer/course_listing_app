@@ -7,12 +7,11 @@ $consumer_key = 'a6694d0888207de681da8b99039f28d205e6e948b';
 $consumer_secret = 'ea51feadb0f2885bd0a5cebd162d38a1';
 
 $schoology = new SchoologyApi($consumer_key, $consumer_secret);
-
 $storage = make_db_connection();
- 
+$uid = get_uid();
+
 session_start();
 
-$uid = get_uid();
 
 if(!isset($_GET['oauth_token'])){
   // Get request token
@@ -28,14 +27,18 @@ if(!isset($_GET['oauth_token'])){
 	$params = array(
 	    'oauth_callback=' . urlencode('https://' . '589f1a81.ngrok.io' . $_SERVER['REQUEST_URI']),
 	    'oauth_token=' . urlencode($result['oauth_token']),
+	    'user_id=' . urlencode($uid),
 	);
 
 	$query_string = implode('&', $params);
+
 	header('Location: ' . 'https://magicdistrict.schoology.com' . '/oauth/authorize?'  . $query_string);
-	exit;
 } 
 else {
   // Get the existing record from our DB
+	$oauth_token = $_GET['oauth_token'];
+	$uid = $storage->getUid($oauth_token)['uid'];
+
 	$request_tokens = $storage->getRequestTokens($uid); //why is this not returning the same uid as from line 15?
 
 	$schoology = new SchoologyApi($consumer_key, $consumer_secret, '', $request_tokens['token_key'], $request_tokens['token_secret']);
@@ -67,6 +70,7 @@ else {
 <span><h3>Check all information needed on user with given UID</h3></span>
 <input type="checkbox" name="courses"> List Courses<br>
 <input type="checkbox" name="groups"> List Groups<br><br>
+<input type="hidden" name="uid" value=<?=$uid?>>
 <input class="submit_button" type="submit">
 </form>
 
