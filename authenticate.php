@@ -10,13 +10,10 @@ $config = new ConfigSettings();
 $storage = new OauthStorage();
 $oauth = new OauthWorkflow($storage, $config, $user);
 
-$uid = $user->get_uid();
-$domain = $user->get_domain();
-
 if($oauth->need_access_token()){
 	if($oauth->need_request_token($_GET)) {
 		$request_token = $oauth->fetch_request_token();
-		$oauth->store_request_token($request_token, $uid);
+		$oauth->store_request_token($request_token);
 		header('Location: ' . $oauth->auth_url($request_token));
 		exit;
 	} 
@@ -25,7 +22,7 @@ if($oauth->need_access_token()){
 	$oauth->get_user_schoology_api_connection($request_credentials);
 	$access_tokens = $oauth->get_new_access_token();
 	$oauth->replace_request_tokens_with_access_tokens($access_tokens);
-	
+
 } else {
 	$oauth->fetch_access_token();
 	$oauth->check_access_token();
