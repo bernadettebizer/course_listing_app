@@ -22,7 +22,6 @@ class GroupCollection {
 		foreach ($this->group_data->group as $group) {
 			$group_data = [
 				'group_title' => $group->title,
-				'group_path' => 'https://magicdistrict.schoology.com/group/' . $group->id,
 				'group_nid' => $group->id,
 			];
 			$groups[] = $group_data;

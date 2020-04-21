@@ -6,6 +6,7 @@ require_once('GroupCollection.php');
 $title = 'User Information App';
 $courses_requested = isset($_POST['courses']);
 $groups_requested = isset($_POST['groups']);
+$domain = $_POST['domain'];
 
 $results = get_data_from_api();
 

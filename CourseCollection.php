@@ -24,7 +24,6 @@ class CourseCollection {
 			$section_data = [
 				'course_title' => $section->course_title,
 				'section_title' => $section->section_title,
-				'section_path' => 'https://magicdistrict.schoology.com/course/' . $section->id,
 				'section_nid' => $section->id,
 				'course_nid' => $section->course_id,
 			];

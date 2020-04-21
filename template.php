@@ -17,7 +17,7 @@
 			<b>Courses</b>
 			<ul>
 			<? foreach($section_list as $section) {?>
-				<li><a href=<?=$section['section_path']?> target="_blank"><?=$section['course_title']?>: <?=$section['section_title']?></a></li>
+				<li><a href=<?=$domain . '/course/' . $section['section_nid']?> target="_blank"><?=$section['course_title']?>: <?=$section['section_title']?></a></li>
 			<?}?>
 			</ul>
 		<?}
@@ -25,7 +25,7 @@
 			<b>Groups</b>
 			<ul>
 			<? foreach($group_list as $group) {?>
-				<li><a href=<?=$group['group_path']?> target="_blank"><?=$group['group_title']?></a></li>
+				<li><a href=<?=$domain . '/group/' . $group['group_nid']?> target="_blank"><?=$group['group_title']?></a></li>
 			<?}?>
 			</ul>
 		<?}
