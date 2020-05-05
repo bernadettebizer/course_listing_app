@@ -1,4 +1,5 @@
 <?php
+require_once('schoology_php_sdk/SchoologyApi.class.php');
 
 class App_OauthStorage implements SchoologyApi_OauthStorage
 {

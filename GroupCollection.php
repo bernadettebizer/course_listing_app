@@ -11,9 +11,8 @@ class GroupCollection {
 	}
 
 	public function group_data_is_valid() {
-		if($this->group_data->group){
+		if($this->group_data->group && $this->groups[0]['group_title']){
 			return TRUE;
-			//add validation here
 		}
 	}
 

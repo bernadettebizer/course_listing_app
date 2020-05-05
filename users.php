@@ -14,11 +14,10 @@ class UserAccount {
 			$user_id = $post['user_id']; 
 			$array = explode('::', $user_id);
 			$uid = $array[0];
-			setcookie('uid', $uid);
 		} elseif (isset($cookie['uid'])) {
 			$uid = $cookie['uid'];
 		} else {
-			$uid = 0;
+			$uid = '0';
 		}
 
 		return $uid;
@@ -29,7 +28,6 @@ class UserAccount {
 			$return_url = $post['launch_presentation_return_url']; 
 			$array = explode('/external_tool', $return_url);
 			$domain = $array[0];
-			setcookie("domain", $domain);
 		} else {
 			$domain = 'https://app.schoology.com';
 		}

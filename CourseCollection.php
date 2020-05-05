@@ -11,10 +11,8 @@ class CourseCollection {
 	}
 
 	public function course_data_is_valid() {
-	// public function validate_course_data() {
-		if($this->course_data->section){
+=		if($this->course_data->section && $this->sections[0]['course_title']){
 			return TRUE;
-			//add more validation here
 		}
 	}
 
