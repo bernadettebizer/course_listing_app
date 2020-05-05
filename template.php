@@ -1,4 +1,4 @@
-<?php include_once("application.php") ?>
+<?php include_once("application.php"); ?>
 
 <!doctype html>
 <html lang="en">
@@ -10,25 +10,25 @@
 </head>
 
 <body>
-	<?if(!$courses_requested && !$groups_requested){?>
+	<?php if(!$courses_requested && !$groups_requested){?>
 		<p>You did not select to list either groups or courses.</p>
-	<?} else {
+	<?php } else {
 		if($courses_requested){?>
 			<b>Courses</b>
 			<ul>
-			<? foreach($section_list as $section) {?>
-				<li><a href=<?=$domain . '/course/' . $section['section_nid']?> target="_blank"><?=$section['course_title']?>: <?=$section['section_title']?></a></li>
-			<?}?>
+			<?php foreach($section_list as $section){?>
+				<li><a href= <?php echo($domain . '/course/' . $section['section_nid'])?> target="_blank"><?php echo($section['course_title'])?>: <?php echo($section['section_title'])?></a></li>
+			<?php }?>
 			</ul>
-		<?}
+		<?php }
 		if($groups_requested){?>
 			<b>Groups</b>
 			<ul>
-			<? foreach($group_list as $group) {?>
-				<li><a href=<?=$domain . '/group/' . $group['group_nid']?> target="_blank"><?=$group['group_title']?></a></li>
-			<?}?>
+			<?php foreach($group_list as $group) {?>
+				<li><a href=<?php echo($domain . '/group/' . $group['group_nid'])?> target="_blank"><?php echo($group['group_title'])?></a></li>
+			<?php }?>
 			</ul>
-		<?}
+		<?php }
 	}
 	?>
 

@@ -9,6 +9,7 @@ class OauthWorkflow {
 	protected $oauth_token;
 	protected $schoology;
 	protected $schoology_auth;
+	protected $auth_url;
 
 	public function __construct($storage, $config, $user) {
 		$this->storage = $storage->get_database_connection();
@@ -18,7 +19,7 @@ class OauthWorkflow {
 	}
 
 	public function need_request_token($get) {
-		if(!isset($get['oauth_token'])) {
+		if(!isset($get['oauth_token']) && !$this->have_access_token()) {
 			return TRUE;
 		}
 	}
@@ -27,18 +28,39 @@ class OauthWorkflow {
 		$request_token = $this->schoology->api('/oauth/request_token');
 		$parsed_request_token = array();
 		parse_str($request_token->result, $parsed_request_token);
-		return $parsed_request_token;
+		$this->store_request_token($parsed_request_token);
+		$this->prepare_auth_url($parsed_request_token);
 	}
 
-	public function auth_url($request_token) {
+	public function need_oauth_token($get) {
+		if($get){
+			if($get['oauth_token'] && !$this->have_access_token()) {
+				return TRUE;
+			}
+		}
+	}
+
+	public function fetch_oauth_token($get) {
+		$oauth_token = $get['oauth_token'];
+		$request_credentials = $this->get_request_credentials_from_oauth($oauth_token);
+		$this->get_user_schoology_api_connection($request_credentials);
+		$access_tokens = $this->get_new_access_token();
+		$this->replace_request_tokens_with_access_tokens($access_tokens);
+	}
+
+	public function prepare_auth_url($request_token) {
 		$params = array(
-		    'oauth_callback=' . urlencode('https://' . '589f1a81.ngrok.io' . $_SERVER['REQUEST_URI']),
+		    'oauth_callback=' . urlencode('https://' . 'f4d0bccf.ngrok.io' . $_SERVER['REQUEST_URI']),
 		    'oauth_token=' . urlencode($request_token['oauth_token']),
 		    'user_id=' . urlencode($this->user->get_uid()),
 		);
 
 		$query_string = implode('&', $params);
-		return $this->user->get_domain() . '/oauth/authorize?'  . $query_string;
+		$this->auth_url = $this->user->get_domain() . '/oauth/authorize?'  . $query_string;
+	}
+
+	public function get_auth_url() {
+		return $this->auth_url;
 	}
 
 	public function need_access_token() {
@@ -51,15 +73,8 @@ class OauthWorkflow {
 		}
 	}
 
-	public function fetch_access_token() {
-		return $this->access_token;
-	}
-
-	public function get_new_access_token() {
-		$access_token = $this->schoology_auth->api('/oauth/access_token');
-		$parsed_access_token = array();
-		parse_str($access_token->result, $parsed_access_token);
-		return $parsed_access_token;
+	public function have_access_token() {
+		return $this->storage->getAccessTokens($this->user->get_uid());
 	}
 
 	public function check_access_token() {
@@ -76,15 +91,11 @@ class OauthWorkflow {
   		}
 	}
 
-	public function need_oauth_token($get) {
-		$oauth_token = $this->fetch_oauth_token($get);
-		$request_credentials = $this->get_request_credentials_from_oauth($oauth_token);
-		$uid = $request_credentials['uid'];
-		return $this->need_access_token($uid);
-	}
-
-	public function fetch_oauth_token($get) {
-		return $get['oauth_token'];
+	public function get_new_access_token() {
+		$access_token = $this->schoology_auth->api('/oauth/access_token');
+		$parsed_access_token = array();
+		parse_str($access_token->result, $parsed_access_token);
+		return $parsed_access_token;
 	}
 
 	public function get_request_credentials_from_oauth($oauth_token) {
@@ -92,7 +103,7 @@ class OauthWorkflow {
 	}
 
 	public function get_user_schoology_api_connection($request_credentials) {
-		$this->schoology_auth = new SchoologyApi($this->config->get_app_consumer_key(), $this->config->get_app_consumer_secret(), '', $request_credentials['token_key'], $request_credentials['token_secret']);
+		$this->schoology_auth = new SchoologyApi($this->config->get_app_consumer_key(), $this->config->get_app_consumer_secret(), '', $request_credentials['token_key'], $request_credentials['token_secret'], TRUE);
 	}
 
 	public function replace_request_tokens_with_access_tokens($access_tokens) {

@@ -10,7 +10,7 @@ class UserAccount {
 	}
 
 	private function set_uid($post, $cookie) {
-		if($post['user_id']){
+		if(isset($post['user_id'])){
 			$user_id = $post['user_id']; 
 			$array = explode('::', $user_id);
 			$uid = $array[0];
@@ -25,7 +25,7 @@ class UserAccount {
 	}
 
 	private function set_domain($post) {
-		if($post['launch_presentation_return_url']){
+		if(isset($post['launch_presentation_return_url'])){
 			$return_url = $post['launch_presentation_return_url']; 
 			$array = explode('/external_tool', $return_url);
 			$domain = $array[0];

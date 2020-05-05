@@ -21,8 +21,8 @@ function get_form_data_from_post(){
 	$form_data = [
 		'courses' => $_POST['courses'],
 		'groups' => $_POST['groups'],
-		'uid' => $_COOKIE['uid'],
-		'domain' => $_COOKIE['domain'],
+		'uid' => $_POST['uid'],
+		'domain' => $_POST['domain'],
 	];
 
 	return $form_data;

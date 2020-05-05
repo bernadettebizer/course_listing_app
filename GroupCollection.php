@@ -10,9 +10,10 @@ class GroupCollection {
 		$this->groups = $this->parse_group_data();
 	}
 
-	public function validate_group_data() {
+	public function group_data_is_valid() {
 		if($this->group_data->group){
 			return TRUE;
+			//add validation here
 		}
 	}
 

@@ -10,7 +10,8 @@ class CourseCollection {
 		$this->sections = $this->parse_course_data();
 	}
 
-	public function validate_course_data() {
+	public function course_data_is_valid() {
+	// public function validate_course_data() {
 		if($this->course_data->section){
 			return TRUE;
 			//add more validation here
