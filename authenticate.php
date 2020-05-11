@@ -7,7 +7,7 @@ require_once('users.php');
 
 $user = new UserAccount($_GET, $_POST, $_COOKIE);
 $config = new ConfigSettings();
-$storage = new OauthStorage();
+$storage = OauthStorageFactory::create();
 $oauth = new OauthWorkflow($storage, $config, $user);
 
 $uid = $user->get_uid();

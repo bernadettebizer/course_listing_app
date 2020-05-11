@@ -11,7 +11,7 @@ class CourseCollection {
 	}
 
 	public function course_data_is_valid() {
-=		if($this->course_data->section && $this->sections[0]['course_title']){
+		if($this->course_data->section && $this->sections[0]['course_title']){
 			return TRUE;
 		}
 	}

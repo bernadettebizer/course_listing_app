@@ -10,7 +10,7 @@
 </head>
 
 <body>
-	<?php if(!$courses_requested && !$groups_requested){?>
+	<?php if(!$results){?>
 		<p>You did not select to list either groups or courses.</p>
 	<?php } else {
 		if($courses_requested){?>

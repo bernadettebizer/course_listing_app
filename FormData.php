@@ -8,10 +8,15 @@ class FormData {
 	protected $domain;
 	protected $storage;
 	protected $config;
+	protected $schoology;
 
 	public function __construct($post, $storage, $config) {
-		$this->courses = $post['courses'];
-		$this->groups = $post['groups'];
+		if (isset($post['courses'])) {
+			$this->courses = $post['courses'];
+		}
+		if (isset($post['groups'])) {
+			$this->groups = $post['groups'];
+		}
 		$this->uid = $post['uid'];
 		$this->domain = $post['domain'];
 		$this->storage = $storage->get_database_connection();
@@ -41,19 +46,26 @@ class FormData {
 		}
 	}
 
-	private function get_request_data() {
+	public function get_request_data() {
 		$request_data = [];
-		$request_data[] = $this->course_request_data();
-		$request_data[] = $this->group_request_data();
+		if (isset($this->courses)) {
+			$request_data[] = $this->course_request_data();
+		}
+		if (isset($this->groups)) {
+			$request_data[] = $this->group_request_data();
+		}
 		return $request_data;
 	}
 
 	public function get_requested_data_from_api() {
-		$requests = $this->get_request_data();
-
-		foreach ($requests as $request) {
-			$output[$request['data_type']] = $this->schoology->api($request['endpoint'])->result;		
+		if (isset($this->courses) || isset($this->groups)) {
+			$requests = $this->get_request_data();
+			foreach ($requests as $request) {
+				$output[$request['data_type']] = $this->schoology->api($request['endpoint'])->result;		
+			}
+			return $output;
+		} else {
+			return NULL;
 		}
-		return $output;
 	}
 }

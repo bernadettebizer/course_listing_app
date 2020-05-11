@@ -1,4 +1,6 @@
-<?php include_once("authenticate.php");?>
+<?php 
+include_once("authenticate.php");
+?>
 
 <!doctype html>
 <html lang="en">

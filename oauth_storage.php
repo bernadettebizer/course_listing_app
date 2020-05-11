@@ -2,7 +2,6 @@
 require_once('App_OauthStorage.class.php');
 
 class OauthStorage {
-
 	protected $db_host;
 	protected $db_user;
 	protected $db_pass;
@@ -22,4 +21,11 @@ class OauthStorage {
 		return $this->storage;
 	}
 
+}
+
+class OauthStorageFactory {
+	public static function create()
+    {
+        return new OauthStorage();
+    }
 }
