@@ -11,7 +11,7 @@ class CourseCollection {
 	}
 
 	public function course_data_is_valid() {
-		if($this->course_data->section && $this->sections[0]['course_title']){
+		if($this->course_data->section && isset($this->sections[0]['course_title'])){
 			return TRUE;
 		}
 	}
@@ -20,13 +20,15 @@ class CourseCollection {
 		$courses = [];
 
 		foreach ($this->course_data->section as $section) {
-			$section_data = [
-				'course_title' => $section->course_title,
-				'section_title' => $section->section_title,
-				'section_nid' => $section->id,
-				'course_nid' => $section->course_id,
-			];
-			$courses[] = $section_data;
+			if(isset($section->course_title) && isset($section->section_title) && isset($section->id) && isset($section->course_id)) {
+				$section_data = [
+					'course_title' => $section->course_title,
+					'section_title' => $section->section_title,
+					'section_nid' => $section->id,
+					'course_nid' => $section->course_id,
+				];
+				$courses[] = $section_data;
+			}
 		}
 
 		return $courses;
@@ -35,25 +37,5 @@ class CourseCollection {
 	public function get_sections() {
 		return $this->sections;
 	}
-
-	// public function get_sections_in_course($course_title) {
-	// 	$course_list = $this->get_parsed_course_list();
-	// 	foreach($course_list->section as $section) {
-
-	// 	}
-	// }
-
-	// public function get_course_by_section($section_title) {
-
-	// }
-
-	// public function get_number_of_sections() {
-
-	// }
-
-	// public function iterate_through_sections() {
-
-	// }
-
 }
 
