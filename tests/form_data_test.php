@@ -87,35 +87,4 @@ class RemoteConnectTest extends TestCase {
 
 		$this->assertEmpty($requests);
 	}
-
-	public function test_get_request_data() {	
-		$section = [
-			'course_title' => 'Title of course',
-			'section_title' => 'Title of section',
-		];
-
-		$api_result = new stdClass;
-		$api_result->result = new stdClass;
-		$api_result->result->section = $section;
-        $schoology = $this->createStub(SchoologyApi::class);
-
-        $form_data = $this->getMockBuilder('FormData')
-             ->disableOriginalConstructor()
-             ->getMock();
-
-		$form_data->schoology = $schoology;
-		$form_data->uid = $this->post['uid'];
-		$form_data->domain = $this->post['domain'];
-		$form_data->config = $this->config;
-		$form_data->courses = $this->post['courses'];
-		var_dump($form_data);
-		//is there a way to set private or protected properties in a class if there are not separate methods for setting those properties
-
-		$result = $form_data->get_requested_data_from_api();
-		$schoology->method('api')
-        	->willReturn($api_result);
-
-        //not working because this is not setting the class properties, so result is null
-		$this->assertSame($result->result->section['course_title'],'Title of course');
-	}
 }

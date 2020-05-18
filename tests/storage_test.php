@@ -33,4 +33,13 @@ class RemoteConnectTest extends TestCase {
 		//asserts this is stored correctly as a Request Token
 		$this->assertSame($this->db_connection->getRequestTokens($test_uid)['token_key'], $test_key);
 	}
+
+	public function test_db_connection_class() {
+		$this->assertInstanceOf(App_OauthStorage::class, $this->db_connection);
+	}
+
+	public function test_storage_attributes() {
+		$this->assertClassHasAttribute('db_host', OauthStorage::class);
+		$this->assertClassHasAttribute('storage', OauthStorage::class);
+	}
 }

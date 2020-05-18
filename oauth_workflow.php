@@ -26,7 +26,6 @@ class OauthWorkflow {
 
 	public function fetch_request_token() {
 		$request_token = $this->schoology->api('/oauth/request_token');
-		var_dump($request_token);
 		$parsed_request_token = array();
 		parse_str($request_token->result, $parsed_request_token);
 		$this->store_request_token($parsed_request_token);
@@ -51,7 +50,7 @@ class OauthWorkflow {
 
 	public function prepare_auth_url($request_token) {
 		$params = array(
-		    'oauth_callback=' . urlencode('https://' . 'f4d0bccf.ngrok.io' . $_SERVER['REQUEST_URI']),
+		    'oauth_callback=' . urlencode('https://' . 'f4d0bccf.ngrok.io'),
 		    'oauth_token=' . urlencode($request_token['oauth_token']),
 		    'user_id=' . urlencode($this->user->get_uid()),
 		);
