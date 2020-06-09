@@ -11,7 +11,7 @@ class GroupCollection {
 	}
 
 	public function group_data_is_valid() {
-		if($this->group_data->group && $this->groups[0]['group_title']){
+		if($this->group_data->group && isset($this->groups[0]['group_title'])){
 			return TRUE;
 		}
 	}
@@ -20,11 +20,13 @@ class GroupCollection {
 		$groups = [];
 
 		foreach ($this->group_data->group as $group) {
-			$group_data = [
-				'group_title' => $group->title,
-				'group_nid' => $group->id,
-			];
-			$groups[] = $group_data;
+			if(isset($group->title) && isset($group->id)) {
+				$group_data = [
+					'group_title' => $group->title,
+					'group_nid' => $group->id,
+				];
+				$groups[] = $group_data;
+			} 
 		}
 		return $groups;
 	}

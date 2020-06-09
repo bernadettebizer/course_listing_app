@@ -50,7 +50,7 @@ class OauthWorkflow {
 
 	public function prepare_auth_url($request_token) {
 		$params = array(
-		    'oauth_callback=' . urlencode('https://' . 'f4d0bccf.ngrok.io' . $_SERVER['REQUEST_URI']),
+		    'oauth_callback=' . urlencode('https://' . 'f4d0bccf.ngrok.io'),
 		    'oauth_token=' . urlencode($request_token['oauth_token']),
 		    'user_id=' . urlencode($this->user->get_uid()),
 		);
